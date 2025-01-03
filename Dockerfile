@@ -3,10 +3,6 @@
 FROM node:20-alpine AS build
 ARG NODE_ENV=production
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-
 # Installing libvips-dev for sharp Compatibility
 RUN apk update && apk add --no-cache chromium build-base gcc autoconf automake zlib-dev libpng-dev vips-dev git && rm -rf /var/cache/apk/* > /dev/null 2>&1
 ENV CHROME_BIN="/usr/bin/chromium-browser" \
@@ -15,20 +11,17 @@ ENV CHROME_BIN="/usr/bin/chromium-browser" \
 
 ENV NODE_ENV=${NODE_ENV}
 WORKDIR /opt/
-COPY ./package.json ./pnpm-lock.yaml ./
+COPY ./package.json ./package-lock.json ./
 RUN npm install -g node-gyp
 ENV PATH=/opt/node_modules/.bin:$PATH
+RUN npm ci
 WORKDIR /opt/app
+
 COPY ./ .
-RUN pnpm install --frozen-lockfile
-RUN pnpm run build
+RUN npm run build
 
 
 FROM node:20-alpine
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 
 # Installing libvips-dev for sharp Compatibility
 RUN apk add --no-cache vips-dev
@@ -48,4 +41,4 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
 # Run everything after as non-privileged user.
 USER pptruser
 
-CMD ["pnpm", "run","start"]
+CMD ["npm", "run","start"]
