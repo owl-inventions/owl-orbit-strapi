@@ -1,0 +1,57 @@
+name: Production
+
+concurrency:
+  group: prod
+  cancel-in-progress: false
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+
+  get_version:
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Get version
+        id: get_version
+        run: echo version=${GITHUB_REF#refs/tags/} >> $GITHUB_OUTPUT
+
+  cms-upload-container:
+    needs:
+      - get_version
+    secrets: inherit
+    uses: ./.github/workflows/sub-publish-image.yml
+    with:
+      tag: ${{ needs.get_version.outputs.version }}
+      app: owl-orbit-strapi
+      file: Dockerfile
+      context: .
+
+  release:
+    needs:
+      - cms-upload-container
+      - get_version
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout gitops repository
+        uses: actions/checkout@v4
+        with:
+          repository: owl-inventions/argo-manifests
+          ref: main
+          token: ${{ secrets.OWL_BOT }}
+
+      - name: update version in dev values file
+        uses: mikefarah/yq@v4.44.5
+        with:
+          cmd: |
+            yq e -i '.cms.image.tag = "${{ needs.get_version.outputs.version }}"' manifests/owl-orbit/prod.values.yaml
+
+      - name: git push
+        run: |
+          git config --global user.email "bot@jnhssg.de"
+          git config --global user.name "Owl Inventions Bot"
+          git add manifests/owl-orbit/prod.values.yaml && git commit -m "🚀 (auto): bump version" && git push

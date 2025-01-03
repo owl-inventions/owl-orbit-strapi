@@ -1,0 +1,45 @@
+name: Staging
+
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  cms-upload-container:
+    secrets: inherit
+    uses: ./.github/workflows/sub-publish-image.yml
+    with:
+      tag: ${{ github.sha }}
+      app: owl-orbit-strapi
+      file: Dockerfile
+      context: .
+
+  release:
+    needs:
+      - cms-upload-container
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout gitops repository
+        uses: actions/checkout@v4
+        with:
+          repository: owl-inventions/argo-manifests
+          ref: main
+          token: ${{ secrets.OWL_BOT }}
+
+      - name: update version in dev values file
+        uses: mikefarah/yq@v4.44.5
+        with:
+          cmd: |
+            yq e -i '.cms.image.tag = "${{ github.sha }}"' manifests/owl-orbit/dev.values.yaml
+
+      - name: git push
+        run: |
+          git config --global user.email "bot@jnhssg.de"
+          git config --global user.name "Owl Inventions Bot"
+          git add manifests/owl-orbit/dev.values.yaml && git commit -m "🚀 (auto): bump version" && git push
