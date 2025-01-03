@@ -18,10 +18,9 @@ WORKDIR /opt/
 COPY ./package.json ./pnpm-lock.yaml ./
 RUN npm install -g node-gyp
 ENV PATH=/opt/node_modules/.bin:$PATH
-RUN pnpm install --frozen-lockfile
 WORKDIR /opt/app
-
 COPY ./ .
+RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
 
