@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/sub-publish-image.yml
     with:
       tag: ${{ github.sha }}
-      app: owl-orbit-strapi
+      app: dev/owl-orbit-strapi
       file: Dockerfile
       context: .
 

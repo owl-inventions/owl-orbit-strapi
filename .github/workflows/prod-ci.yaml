@@ -27,7 +27,7 @@ jobs:
     uses: ./.github/workflows/sub-publish-image.yml
     with:
       tag: ${{ needs.get_version.outputs.version }}
-      app: owl-orbit-strapi
+      app: stable/owl-orbit-strapi
       file: Dockerfile
       context: .
 
