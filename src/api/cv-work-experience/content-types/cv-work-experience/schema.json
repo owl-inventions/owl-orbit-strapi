@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cv_work_experiences",
+  "info": {
+    "singularName": "cv-work-experience",
+    "pluralName": "cv-work-experiences",
+    "displayName": "CV Work Experience"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "startedAt": {
+      "type": "date"
+    },
+    "finishedAt": {
+      "type": "date"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "reference_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::reference-tag.reference-tag",
+      "inversedBy": "cv_work_experiences"
+    }
+  }
+}

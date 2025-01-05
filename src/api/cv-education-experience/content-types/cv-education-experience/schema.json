@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cv_education_experiences",
+  "info": {
+    "singularName": "cv-education-experience",
+    "pluralName": "cv-education-experiences",
+    "displayName": "CV Education Experience"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "startedAt": {
+      "type": "date"
+    },
+    "finishedAt": {
+      "type": "date"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "reference_tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::reference-tag.reference-tag",
+      "inversedBy": "cv_education_experiences"
+    }
+  }
+}

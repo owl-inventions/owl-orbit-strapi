@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reference_tags",
+  "info": {
+    "singularName": "reference-tag",
+    "pluralName": "reference-tags",
+    "displayName": "Reference Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "posts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::post.post",
+      "mappedBy": "reference_tags"
+    },
+    "cv_education_experiences": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::cv-education-experience.cv-education-experience",
+      "mappedBy": "reference_tags"
+    },
+    "cv_work_experiences": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::cv-work-experience.cv-work-experience",
+      "mappedBy": "reference_tags"
+    }
+  }
+}
