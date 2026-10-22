@@ -1,6 +1,6 @@
 # Docker file inspired from https://docs.strapi.io/dev-docs/installation/docker#production-dockerfile
 
-FROM node:24.22.1-alpine AS build
+FROM node:26.12.0-alpine AS build
 ARG NODE_ENV=production
 
 # Installing libvips-dev for sharp Compatibility
@@ -21,7 +21,7 @@ COPY ./ .
 RUN npm run build
 
 
-FROM node:24.22.1-alpine
+FROM node:26.12.0-alpine
 
 # Installing libvips-dev for sharp Compatibility
 RUN apk add --no-cache vips-dev
