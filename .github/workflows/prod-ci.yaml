@@ -38,7 +38,7 @@ jobs:
     runs-on: blacksmith-4vcpu-ubuntu-2404-arm
     steps:
       - name: checkout gitops repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: owl-inventions/argo-manifests
           ref: main
