@@ -23,7 +23,7 @@ jobs:
   release:
     needs:
       - cms-upload-container
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
     steps:
       - name: checkout gitops repository
         uses: actions/checkout@v4
